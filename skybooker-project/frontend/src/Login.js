@@ -8,52 +8,63 @@ function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    
-    // AB LOGIN ASAN HAI: Email ki jagah sirf 'akriti' aur password '123'
-    if (email === 'akriti' && password === '123') {
-      navigate('/search');
-    } else {
-      alert('Wrong! Use: akriti / 123');
-    }
+    // No validation - Direct entry
+    navigate('/search');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">SkyBooker Login</h2>
+    // Background with a soft blue-to-indigo gradient
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 px-4">
+      
+      {/* Main Glass Card */}
+      <div className="bg-white/10 backdrop-blur-md p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-white/20">
         
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Username / Email</label>
+        {/* Logo/Icon Section */}
+        <div className="text-center mb-8">
+          <div className="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30">
+            <span className="text-4xl">✈️</span>
+          </div>
+          <h2 className="text-4xl font-black text-white tracking-tighter uppercase">SkyBooker</h2>
+          <p className="text-blue-100 text-sm font-medium mt-1">Akriti's Travel Portal</p>
+        </div>
+        
+        <form onSubmit={handleLogin} className="space-y-5">
+          {/* Email/Username Input */}
+          <div className="relative">
             <input 
               type="text" 
-              className="mt-1 block w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 outline-none text-black" 
-              placeholder="e.g. akriti" 
+              className="w-full bg-white/10 border border-white/20 p-4 rounded-2xl outline-none text-white placeholder-blue-200 focus:bg-white/20 focus:border-white/50 transition-all" 
+              placeholder="Username or Email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+          {/* Password Input */}
+          <div className="relative">
             <input 
               type="password" 
-              className="mt-1 block w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 outline-none text-black" 
-              placeholder="e.g. 123" 
+              className="w-full bg-white/10 border border-white/20 p-4 rounded-2xl outline-none text-white placeholder-blue-200 focus:bg-white/20 focus:border-white/50 transition-all" 
+              placeholder="Password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
 
+          {/* Login Button with Shine Effect */}
           <button 
             type="submit" 
-            className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="w-full bg-white text-blue-600 p-4 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-xl active:scale-95 uppercase tracking-widest mt-4"
           >
-            Login
+            Get Started
           </button>
         </form>
+
+        <div className="mt-8 text-center">
+          <p className="text-blue-100 text-xs font-bold uppercase tracking-widest opacity-60">
+            Unlimited Access • No Password Required
+          </p>
+        </div>
       </div>
     </div>
   );
