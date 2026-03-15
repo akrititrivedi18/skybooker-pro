@@ -9,6 +9,7 @@ const cities = ["Delhi", "Mumbai", "Bangalore", "Goa", "Kolkata", "Chennai", "Hy
 function SearchPage() {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
+  const [passengerName, setPassengerName] = useState(''); // 1. Naya state name ke liye
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -22,9 +23,9 @@ function SearchPage() {
 
     setLoading(true);
     try {
-     const res = await axios.get(`https://skybooker-pro.onrender.com/api/flights`, {
-  params: { origin: from.trim(), destination: to.trim() }
-});
+      const res = await axios.get(`https://skybooker-pro.onrender.com/api/flights`, {
+        params: { origin: from.trim(), destination: to.trim() }
+      });
 
       setFlights(res.data);
       
@@ -57,12 +58,25 @@ function SearchPage() {
         <h2 className="text-4xl font-extrabold mb-4 uppercase tracking-tighter italic">Akriti's Flight Finder 💎</h2>
         <p className="text-blue-100 mb-8">Exclusive access to premium routes and best deals</p>
         
-        <div className="bg-white p-6 rounded-3xl shadow-2xl max-w-5xl mx-auto flex flex-wrap gap-4 items-end justify-center">
+        <div className="bg-white p-6 rounded-3xl shadow-2xl max-w-6xl mx-auto flex flex-wrap gap-4 items-end justify-center">
+          
+          {/* 2. Passenger Name Input Add kiya */}
+          <div className="flex flex-col text-left">
+            <label className="text-gray-400 text-xs font-bold mb-1 ml-1 text-black">PASSENGER NAME</label>
+            <input 
+              type="text"
+              className="text-gray-800 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none w-64 shadow-sm" 
+              placeholder="Enter Name" 
+              value={passengerName}
+              onChange={(e) => setPassengerName(e.target.value)} 
+            />
+          </div>
+
           <div className="flex flex-col text-left">
             <label className="text-gray-400 text-xs font-bold mb-1 ml-1 text-black">FROM</label>
             <input 
               list="city-list"
-              className="text-gray-800 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none w-72 shadow-sm" 
+              className="text-gray-800 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none w-64 shadow-sm" 
               placeholder="e.g. Delhi" 
               value={from}
               onChange={(e) => setFrom(e.target.value)} 
@@ -75,7 +89,7 @@ function SearchPage() {
             <label className="text-gray-400 text-xs font-bold mb-1 ml-1 text-black">TO</label>
             <input 
               list="city-list"
-              className="text-gray-800 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none w-72 shadow-sm" 
+              className="text-gray-800 border-2 border-gray-100 p-4 rounded-2xl focus:border-blue-500 outline-none w-64 shadow-sm" 
               placeholder="e.g. Mumbai" 
               value={to}
               onChange={(e) => setTo(e.target.value)} 
@@ -88,7 +102,7 @@ function SearchPage() {
 
           <button 
             onClick={searchFlights} 
-            className="bg-orange-500 hover:bg-orange-600 text-white px-12 py-4 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95"
           >
             {loading ? "SEARCHING..." : "SEARCH FLIGHTS"}
           </button>
@@ -99,7 +113,7 @@ function SearchPage() {
       <div className="max-w-4xl mx-auto py-12 px-6">
         {flights.length > 0 ? (
           <div className="grid gap-6">
-            <h3 className="text-gray-400 font-bold uppercase tracking-widest text-sm mb-2 text-center">Flights Found for Akriti</h3>
+            <h3 className="text-gray-400 font-bold uppercase tracking-widest text-sm mb-2 text-center">Flights Found for {passengerName || 'Akriti'}</h3>
             {flights.map(f => (
               <div key={f.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-wrap justify-between items-center hover:shadow-xl transition transform hover:-translate-y-1">
                 <div className="flex items-center gap-5 text-black text-left">
@@ -126,11 +140,11 @@ function SearchPage() {
             ))}
           </div>
         ) : (
-          !loading && <div className="text-center py-20 text-gray-400 text-xl font-medium italic">Type cities to start your journey, Akriti! ✨</div>
+          !loading && <div className="text-center py-20 text-gray-400 text-xl font-medium italic">Type cities to start your journey, {passengerName || 'Akriti'}! ✨</div>
         )}
       </div>
 
-      {/* AKRITI'S SPECIAL BOARDING PASS */}
+      {/* AKRITI'S SPECIAL BOARDING PASS (MODAL) */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 z-[100]">
           <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl max-w-lg w-full transform transition-all border-4 border-blue-50">
@@ -141,19 +155,19 @@ function SearchPage() {
             </div>
 
             <div className="bg-blue-600 p-6 text-white flex justify-between items-center border-t border-blue-400">
-              <div className="text-left">
+              <div className="text-left text-white">
                 <p className="text-[10px] font-bold opacity-80 uppercase tracking-widest text-white">Airline Partner</p>
                 <h2 className="text-2xl font-black text-white">{selectedFlight?.airline}</h2>
               </div>
               <div className="text-right text-white">
-                <p className="text-xl font-bold">VIP Economy</p>
-                <p className="text-[10px] opacity-80 uppercase font-bold tracking-tighter">Status: Confirmed</p>
+                <p className="text-xl font-bold text-white">VIP Economy</p>
+                <p className="text-[10px] opacity-80 uppercase font-bold tracking-tighter text-white">Status: Confirmed</p>
               </div>
             </div>
 
             <div className="p-8 relative bg-white">
               <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-                <h1 className="text-9xl font-black rotate-12">AKRITI</h1>
+                <h1 className="text-9xl font-black rotate-12">{passengerName.split(' ')[0] || "AKRITI"}</h1>
               </div>
 
               <div className="flex justify-between items-center mb-8 relative z-10">
@@ -173,7 +187,8 @@ function SearchPage() {
               <div className="grid grid-cols-2 gap-y-8 text-left border-t-2 border-gray-50 pt-8 relative z-10">
                 <div>
                   <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest">Passenger Name</p>
-                  <p className="font-black text-xl text-gray-800">Akriti Trivedi</p>
+                  {/* 3. Boarding Pass mein dynamic name dikhaya */}
+                  <p className="font-black text-xl text-gray-800">{passengerName || "Akriti Trivedi"}</p>
                 </div>
                 <div>
                   <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest">Travel Date</p>
@@ -197,7 +212,7 @@ function SearchPage() {
                       ))}
                     </div>
                  </div>
-                 <p className="text-[9px] text-gray-400 mt-3 font-mono tracking-[0.5em] text-center">AKRITI-TRIVEDI-OFFICIAL-SKYPASS</p>
+                 <p className="text-[9px] text-gray-400 mt-3 font-mono tracking-[0.5em] text-center">{passengerName.toUpperCase() || "AKRITI TRIVEDI"}-OFFICIAL-SKYPASS</p>
               </div>
             </div>
 
@@ -205,7 +220,7 @@ function SearchPage() {
               onClick={() => setShowModal(false)} 
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-6 font-black text-xl transition-all shadow-2xl uppercase tracking-widest"
             >
-              Download Akriti's Ticket
+              Download Ticket
             </button>
           </div>
         </div>
