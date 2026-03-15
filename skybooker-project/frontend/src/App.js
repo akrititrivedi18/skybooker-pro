@@ -6,10 +6,23 @@ import Login from './Login';
 // Suggestion list ke liye cities
 const cities = ["Delhi", "Mumbai", "Bangalore", "Goa", "Kolkata", "Chennai", "Hyderabad", "Jaipur", "Lucknow"];
 
+// 1. Plane Animation ke liye custom style add kiya
+const planeAnimationStyle = {
+  '@keyframes fly': {
+    '0%': { transform: 'translateX(-100%) translateY(0) rotate(10deg)', opacity: 0 },
+    '10%': { opacity: 1 },
+    '90%': { opacity: 1 },
+    '100%': { transform: 'translateX(100vw) translateY(-20vh) rotate(10deg)', opacity: 0 },
+  },
+  '.animate-fly': {
+    animation: 'fly 15s linear infinite', // 15 seconds mein ek baar plane jayega, aur baar-baar chalega
+  }
+};
+
 function SearchPage() {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [passengerName, setPassengerName] = useState(''); // 1. Naya state name ke liye
+  const [passengerName, setPassengerName] = useState('');
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -41,9 +54,22 @@ function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      {/* Navbar */}
-      <nav className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-50 px-10">
+    // 2. Custom style ko use karne ke liye style tag add kiya
+    <div className="min-h-screen bg-gray-50 font-sans relative overflow-hidden">
+      <style>{`
+        ${planeAnimationStyle['@keyframes fly'] && Object.entries(planeAnimationStyle['@keyframes fly']).map(([key, value]) => `@keyframes fly { ${key} { ${Object.entries(value).map(([vKey, vVal]) => `${vKey}: ${vVal}`).join('; ')} } }`).join('\n')}
+        ${Object.entries(planeAnimationStyle).filter(([key]) => key.startsWith('.')).map(([key, value]) => `${key} { ${Object.entries(value).map(([vKey, vVal]) => `${vKey}: ${vVal}`).join('; ')} }`).join('\n')}
+      `}</style>
+
+      {/* 3. Background Animation: Halka plane jo piche se jayega */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="animate-fly absolute text-9xl text-blue-100 opacity-20" style={{ top: '30vh' }}>
+          ✈️
+        </div>
+      </div>
+
+      {/* Navbar - Iska z-index badhaya taaki plane iske niche se jaye */}
+      <nav className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-50 px-10 relative">
         <div className="text-2xl font-black text-blue-600">SKYBOOKER ✈️</div>
         <button 
           onClick={() => window.location.href = '/'} 
@@ -54,13 +80,12 @@ function SearchPage() {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-blue-600 py-16 px-6 text-white text-center">
+      <div className="bg-blue-600 py-16 px-6 text-white text-center relative z-10">
         <h2 className="text-4xl font-extrabold mb-4 uppercase tracking-tighter italic">Akriti's Flight Finder 💎</h2>
         <p className="text-blue-100 mb-8">Exclusive access to premium routes and best deals</p>
         
-        <div className="bg-white p-6 rounded-3xl shadow-2xl max-w-6xl mx-auto flex flex-wrap gap-4 items-end justify-center">
+        <div className="bg-white p-6 rounded-3xl shadow-2xl max-w-6xl mx-auto flex flex-wrap gap-4 items-end justify-center relative z-20">
           
-          {/* 2. Passenger Name Input Add kiya */}
           <div className="flex flex-col text-left">
             <label className="text-gray-400 text-xs font-bold mb-1 ml-1 text-black">PASSENGER NAME</label>
             <input 
@@ -110,7 +135,7 @@ function SearchPage() {
       </div>
 
       {/* Results Section */}
-      <div className="max-w-4xl mx-auto py-12 px-6">
+      <div className="max-w-4xl mx-auto py-12 px-6 relative z-10">
         {flights.length > 0 ? (
           <div className="grid gap-6">
             <h3 className="text-gray-400 font-bold uppercase tracking-widest text-sm mb-2 text-center">Flights Found for {passengerName || 'Akriti'}</h3>
@@ -187,7 +212,6 @@ function SearchPage() {
               <div className="grid grid-cols-2 gap-y-8 text-left border-t-2 border-gray-50 pt-8 relative z-10">
                 <div>
                   <p className="text-blue-400 text-[10px] font-black uppercase tracking-widest">Passenger Name</p>
-                  {/* 3. Boarding Pass mein dynamic name dikhaya */}
                   <p className="font-black text-xl text-gray-800">{passengerName || "Akriti Trivedi"}</p>
                 </div>
                 <div>
